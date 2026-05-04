@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, ShoppingCart, User, Search, MapPin, Phone, Mail, Package, CreditCard, Clock, Check, Shield } from 'lucide-react';
 import { SearchModal } from './SearchModal';
+import { checkoutItems } from '../data/payungDataset';
 
 interface CheckoutProps {
   onNavigate: (page: string) => void;
@@ -334,15 +335,19 @@ export function Checkout({ onNavigate }: CheckoutProps) {
 
               {/* Product Items */}
               <div className="space-y-4 mb-6 pb-6 border-b border-gray-200">
-                {[1, 2, 3].map((item) => (
-                  <div key={item} className="flex gap-3">
-                    <div className="bg-gradient-to-br from-amber-100 to-orange-100 rounded-lg w-16 h-16 flex items-center justify-center flex-shrink-0">
-                      <span className="text-amber-900 opacity-40 text-2xl">☂️</span>
+                {checkoutItems.map((product) => (
+                  <div key={product.id} className="flex gap-3">
+                    <div className="rounded-lg w-16 h-16 overflow-hidden flex-shrink-0 bg-white shadow-inner">
+                      <img
+                        src={product.imageUrl}
+                        alt={product.alt}
+                        className="object-cover w-full h-full"
+                      />
                     </div>
                     <div className="flex-1">
-                      <h4 className="text-sm font-medium text-gray-900 mb-1">Payung Geulis Motif {item}</h4>
+                      <h4 className="text-sm font-medium text-gray-900 mb-1">{product.name}</h4>
                       <p className="text-xs text-gray-600 mb-2">Merah • Qty: 1</p>
-                      <p className="text-sm font-semibold text-amber-700">Rp 145.000</p>
+                      <p className="text-sm font-semibold text-amber-700">{product.price}</p>
                     </div>
                   </div>
                 ))}

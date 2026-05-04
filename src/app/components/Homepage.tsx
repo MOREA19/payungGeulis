@@ -1,6 +1,7 @@
 import React from 'react';
 import { Menu, Search, ShoppingCart, User, Award, Truck, Shield, Star, X } from 'lucide-react';
 import { SearchModal } from './SearchModal';
+import { aboutImageUrl, heroImageUrl, productList } from '../data/payungDataset';
 
 interface HomepageProps {
   onNavigate: (page: string) => void;
@@ -276,12 +277,12 @@ export function Homepage({ onNavigate }: HomepageProps) {
               </div>
             </div>
             <div className="relative">
-              <div className="aspect-square bg-gradient-to-br from-amber-200 to-orange-300 rounded-3xl shadow-2xl flex items-center justify-center">
-                <div className="text-center text-amber-900 opacity-40">
-                  <div className="text-6xl mb-4">☂️</div>
-                  <div className="text-xl font-semibold">Hero Image</div>
-                  <div className="text-sm">Payung Geulis</div>
-                </div>
+              <div className="aspect-square rounded-3xl shadow-2xl overflow-hidden bg-white">
+                <img
+                  src={heroImageUrl}
+                  alt="Payung Geulis Hero"
+                  className="object-cover w-full h-full"
+                />
               </div>
               <div className="absolute -bottom-6 -right-6 w-32 h-32 bg-amber-600 rounded-full opacity-20 blur-2xl"></div>
             </div>
@@ -294,14 +295,12 @@ export function Homepage({ onNavigate }: HomepageProps) {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-16 items-center">
             <div className="relative">
-              <div className="aspect-[4/3] bg-gradient-to-br from-amber-200 via-orange-200 to-amber-300 rounded-3xl shadow-2xl overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center text-amber-900 opacity-40">
-                  <div className="text-center">
-                    <div className="text-7xl mb-4">☂️</div>
-                    <div className="text-2xl font-semibold">Proses Pembuatan</div>
-                    <div className="text-sm mt-2">Payung Tradisional</div>
-                  </div>
-                </div>
+              <div className="aspect-[4/3] rounded-3xl shadow-2xl overflow-hidden bg-white">
+                <img
+                  src={aboutImageUrl}
+                  alt="Proses Pembuatan Payung Geulis"
+                  className="object-cover w-full h-full"
+                />
               </div>
               <div className="absolute -bottom-8 -left-8 w-40 h-40 bg-amber-600 rounded-full opacity-10 blur-3xl"></div>
               <div className="absolute -top-8 -right-8 w-32 h-32 bg-orange-600 rounded-full opacity-10 blur-3xl"></div>
@@ -365,28 +364,19 @@ export function Homepage({ onNavigate }: HomepageProps) {
 
           {/* Product Grid */}
           <div className="grid md:grid-cols-4 gap-8">
-            {[
-              { name: 'Payung Batik Parang', price: 'Rp 350.000', stock: 25 },
-              { name: 'Payung Batik Mega Mendung', price: 'Rp 450.000', stock: 18 },
-              { name: 'Payung Batik Kawung', price: 'Rp 400.000', stock: 30 },
-              { name: 'Payung Batik Sekar Jagad', price: 'Rp 500.000', stock: 12 },
-              { name: 'Payung Mini Bordir', price: 'Rp 250.000', stock: 40 },
-              { name: 'Payung Jumbo Classic', price: 'Rp 650.000', stock: 8 },
-              { name: 'Payung Custom Design', price: 'Rp 750.000', stock: 5 },
-              { name: 'Payung Eksklusif Gold', price: 'Rp 850.000', stock: 3 }
-            ].map((product, index) => (
+            {productList.slice(0, 8).map((product, index) => (
               <button
-                key={index}
+                key={product.id}
                 onClick={() => onNavigate('product')}
                 className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
               >
                 {/* Product Image */}
-                <div className="aspect-square bg-gradient-to-br from-amber-100 via-orange-100 to-amber-200 flex items-center justify-center relative overflow-hidden">
-                  <div className="text-amber-900 opacity-30 text-center">
-                    <div className="text-5xl mb-2">☂️</div>
-                    <div className="text-sm font-semibold">{product.name}</div>
-                  </div>
-                  {/* Badge */}
+                <div className="aspect-square relative overflow-hidden bg-white min-h-[260px]">
+                  <img
+                    src={product.imageUrl}
+                    alt={product.alt}
+                    className="block object-cover w-full h-full"
+                  />
                   {product.stock < 10 && (
                     <div className="absolute top-3 right-3 px-3 py-1 bg-red-600 text-white text-xs rounded-full font-semibold">
                       Stok Terbatas

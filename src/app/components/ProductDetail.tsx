@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ArrowLeft, ShoppingCart, User, Search, Minus, Plus, Star, Heart, Share2, Package, Shield, Truck, Menu } from 'lucide-react';
 import { SearchModal } from './SearchModal';
+import { detailImages } from '../data/payungDataset';
 
 interface ProductDetailProps {
   onNavigate: (page: string) => void;
@@ -101,25 +102,30 @@ export function ProductDetail({ onNavigate }: ProductDetailProps) {
         <div className="grid md:grid-cols-2 gap-12 mb-16">
           {/* Left - Images */}
           <div>
-            <div className="bg-gradient-to-br from-amber-100 to-orange-100 rounded-2xl h-[500px] mb-4 flex items-center justify-center overflow-hidden relative group">
-              <div className="text-center text-amber-900 opacity-30">
-                <div className="text-7xl mb-4">☂️</div>
-                <div className="text-xl font-semibold">Foto Produk Utama</div>
-              </div>
+            <div className="rounded-2xl h-[500px] mb-4 overflow-hidden relative group bg-white shadow-lg">
+              <img
+                src={detailImages[selectedImage].src}
+                alt={detailImages[selectedImage].alt}
+                className="object-cover w-full h-full"
+              />
               <button className="absolute top-4 right-4 p-3 bg-white/80 backdrop-blur rounded-full hover:bg-white transition-all shadow-lg">
                 <Heart className="w-5 h-5 text-gray-700" />
               </button>
             </div>
             <div className="grid grid-cols-4 gap-3">
-              {[0, 1, 2, 3].map((item) => (
+              {detailImages.map((image, item) => (
                 <button
                   key={item}
                   onClick={() => setSelectedImage(item)}
-                  className={`bg-gradient-to-br from-amber-100 to-orange-100 rounded-xl h-24 flex items-center justify-center text-xs transition-all ${
+                  className={`rounded-xl h-24 overflow-hidden transition-transform ${
                     selectedImage === item ? 'ring-2 ring-amber-600 scale-105' : 'hover:scale-105'
                   }`}
                 >
-                  <span className="text-amber-900 opacity-40">☂️</span>
+                  <img
+                    src={image.src}
+                    alt={image.alt}
+                    className="object-cover w-full h-full"
+                  />
                 </button>
               ))}
             </div>

@@ -398,13 +398,26 @@ export function CustomerLogin({ onNavigate }: CustomerLoginProps) {
                 </p>
 
                 <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 mb-8">
-                  <div className="aspect-square bg-white/20 rounded-xl flex items-center justify-center mb-4">
-                    <div className="text-center opacity-60">
-                      <div className="text-6xl mb-2">☂️</div>
-                      <div className="text-sm">Ilustrasi Payung</div>
+                  <div className="relative aspect-square rounded-3xl overflow-hidden bg-white/10 border border-white/20 mb-4">
+                    <div className="absolute inset-0 bg-gradient-to-br from-amber-400/20 via-orange-300/10 to-white/10"></div>
+                    <div className="absolute -top-8 left-6 w-32 h-32 bg-white/30 rounded-full blur-2xl"></div>
+                    <div className="absolute -bottom-10 right-8 w-40 h-40 bg-white/20 rounded-full blur-3xl"></div>
+                    <div className="relative z-10 flex items-center justify-center h-full">
+                      <div className="relative w-32 h-32 bg-white/20 rounded-full border border-white/30 shadow-inner flex items-center justify-center">
+                        <svg viewBox="0 0 120 120" className="w-24 h-24 text-amber-600" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M20 55C24 34 40 20 60 20C80 20 96 34 100 55" stroke="currentColor" strokeWidth="10" strokeLinecap="round" />
+                          <path d="M90 55C86 60 80 75 60 90C40 75 34 60 30 55" fill="currentColor" fillOpacity="0.15" />
+                          <path d="M60 90V108" stroke="currentColor" strokeWidth="8" strokeLinecap="round" />
+                          <path d="M48 58C45 63 45 72 60 80C75 72 75 63 72 58" stroke="currentColor" strokeWidth="6" strokeLinecap="round" />
+                          <circle cx="60" cy="48" r="4" fill="currentColor" />
+                        </svg>
+                      </div>
                     </div>
                   </div>
-                  <p className="text-center text-sm text-amber-100">
+                  <p className="text-center text-sm text-amber-100 font-medium">
+                    Ilustrasi Payung Geulis
+                  </p>
+                  <p className="text-center text-xs text-amber-200 mt-2">
                     Kerajinan Tradisional Berkualitas
                   </p>
                 </div>

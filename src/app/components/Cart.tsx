@@ -1,6 +1,7 @@
 import React from 'react';
 import { ArrowLeft, ShoppingCart, User, Search, Trash2, Minus, Plus, Tag } from 'lucide-react';
 import { SearchModal } from './SearchModal';
+import { cartItems } from '../data/payungDataset';
 
 interface CartProps {
   onNavigate: (page: string) => void;
@@ -88,8 +89,8 @@ export function Cart({ onNavigate }: CartProps) {
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Left - Cart Items */}
           <div className="lg:col-span-2 space-y-4">
-            {[1, 2, 3].map((item) => (
-              <div key={item} className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow">
+            {cartItems.map((product, index) => (
+              <div key={product.id} className="bg-white rounded-2xl shadow-sm p-6 hover:shadow-md transition-shadow">
                 <div className="flex gap-6">
                   {/* Checkbox */}
                   <div className="flex items-start pt-2">
@@ -97,11 +98,12 @@ export function Cart({ onNavigate }: CartProps) {
                   </div>
 
                   {/* Product Image */}
-                  <div className="w-32 h-32 bg-gradient-to-br from-amber-100 to-orange-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                    <div className="text-center text-amber-800 opacity-40">
-                      <div className="text-3xl mb-1">☂️</div>
-                      <div className="text-xs">Produk {item}</div>
-                    </div>
+                  <div className="w-32 h-32 rounded-xl overflow-hidden flex-shrink-0 bg-white shadow-inner">
+                    <img
+                      src={product.imageUrl}
+                      alt={product.alt}
+                      className="object-cover w-full h-full"
+                    />
                   </div>
 
                   {/* Product Info */}
@@ -109,7 +111,7 @@ export function Cart({ onNavigate }: CartProps) {
                     <div className="flex justify-between items-start mb-2">
                       <div>
                         <h3 className="font-semibold text-lg text-gray-900 mb-1">
-                          Payung Geulis Motif Batik {item}
+                          {product.name}
                         </h3>
                         <p className="text-sm text-gray-600">Warna: Merah | Ukuran: 100cm</p>
                       </div>
@@ -122,7 +124,7 @@ export function Cart({ onNavigate }: CartProps) {
                       {/* Price */}
                       <div>
                         <div className="text-xs text-gray-500 line-through">Rp 200.000</div>
-                        <div className="text-xl font-bold text-amber-700">Rp {125 + item * 10}.000</div>
+                        <div className="text-xl font-bold text-amber-700">{product.price}</div>
                       </div>
 
                       {/* Quantity */}
@@ -132,7 +134,7 @@ export function Cart({ onNavigate }: CartProps) {
                           <button className="px-3 py-2 hover:bg-gray-50 transition-colors">
                             <Minus className="w-4 h-4 text-gray-600" />
                           </button>
-                          <div className="px-6 py-2 border-x-2 border-gray-200 font-semibold">{item}</div>
+                          <div className="px-6 py-2 border-x-2 border-gray-200 font-semibold">{index + 1}</div>
                           <button className="px-3 py-2 hover:bg-gray-50 transition-colors">
                             <Plus className="w-4 h-4 text-gray-600" />
                           </button>

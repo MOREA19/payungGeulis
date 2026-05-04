@@ -1,6 +1,7 @@
 import React from 'react';
 import { Search, ShoppingCart, User, Star } from 'lucide-react';
 import { SearchModal } from './SearchModal';
+import { productList } from '../data/payungDataset';
 
 interface ProductsPageProps {
   onNavigate: (page: string) => void;
@@ -12,46 +13,7 @@ export function ProductsPage({ onNavigate }: ProductsPageProps) {
   const [currentPage, setCurrentPage] = React.useState(1);
   const [sortBy, setSortBy] = React.useState('Terbaru');
 
-  const allProducts = [
-    { name: 'Payung Batik Parang', price: 'Rp 350.000', stock: 25, category: 'Sedang' },
-    { name: 'Payung Batik Mega Mendung', price: 'Rp 450.000', stock: 18, category: 'Besar' },
-    { name: 'Payung Batik Kawung', price: 'Rp 400.000', stock: 30, category: 'Sedang' },
-    { name: 'Payung Batik Sekar Jagad', price: 'Rp 500.000', stock: 12, category: 'Besar' },
-    { name: 'Payung Mini Bordir', price: 'Rp 250.000', stock: 40, category: 'Mini' },
-    { name: 'Payung Jumbo Classic', price: 'Rp 650.000', stock: 8, category: 'Besar' },
-    { name: 'Payung Custom Design', price: 'Rp 750.000', stock: 5, category: 'Sedang' },
-    { name: 'Payung Eksklusif Gold', price: 'Rp 850.000', stock: 3, category: 'Besar' },
-    { name: 'Payung Mini Floral', price: 'Rp 275.000', stock: 35, category: 'Mini' },
-    { name: 'Payung Batik Truntum', price: 'Rp 425.000', stock: 20, category: 'Sedang' },
-    { name: 'Payung Classic Brown', price: 'Rp 325.000', stock: 28, category: 'Sedang' },
-    { name: 'Payung Premium Silk', price: 'Rp 950.000', stock: 2, category: 'Besar' },
-    // Halaman 2
-    { name: 'Payung Batik Cirebon', price: 'Rp 375.000', stock: 22, category: 'Sedang' },
-    { name: 'Payung Lukis Tangan', price: 'Rp 825.000', stock: 6, category: 'Besar' },
-    { name: 'Payung Mini Polkadot', price: 'Rp 225.000', stock: 45, category: 'Mini' },
-    { name: 'Payung Vintage Classic', price: 'Rp 475.000', stock: 15, category: 'Sedang' },
-    { name: 'Payung Batik Solo', price: 'Rp 425.000', stock: 19, category: 'Sedang' },
-    { name: 'Payung Jumbo Premium', price: 'Rp 775.000', stock: 7, category: 'Besar' },
-    { name: 'Payung Mini Stripe', price: 'Rp 265.000', stock: 38, category: 'Mini' },
-    { name: 'Payung Batik Pekalongan', price: 'Rp 395.000', stock: 24, category: 'Sedang' },
-    { name: 'Payung Limited Edition', price: 'Rp 1.250.000', stock: 1, category: 'Besar' },
-    { name: 'Payung Batik Modern', price: 'Rp 450.000', stock: 16, category: 'Sedang' },
-    { name: 'Payung Rainbow Kids', price: 'Rp 195.000', stock: 50, category: 'Mini' },
-    { name: 'Payung Executive Black', price: 'Rp 875.000', stock: 4, category: 'Besar' },
-    // Halaman 3
-    { name: 'Payung Batik Yogya', price: 'Rp 385.000', stock: 21, category: 'Sedang' },
-    { name: 'Payung Garden Floral', price: 'Rp 335.000', stock: 27, category: 'Sedang' },
-    { name: 'Payung Mini Cute', price: 'Rp 215.000', stock: 42, category: 'Mini' },
-    { name: 'Payung Jumbo Golf', price: 'Rp 725.000', stock: 9, category: 'Besar' },
-    { name: 'Payung Batik Lasem', price: 'Rp 415.000', stock: 17, category: 'Sedang' },
-    { name: 'Payung Premium Navy', price: 'Rp 525.000', stock: 13, category: 'Besar' },
-    { name: 'Payung Mini Compact', price: 'Rp 285.000', stock: 36, category: 'Mini' },
-    { name: 'Payung Batik Madura', price: 'Rp 365.000', stock: 23, category: 'Sedang' },
-    { name: 'Payung Royal Edition', price: 'Rp 1.150.000', stock: 2, category: 'Besar' },
-    { name: 'Payung Batik Classic', price: 'Rp 355.000', stock: 26, category: 'Sedang' },
-    { name: 'Payung Mini Travel', price: 'Rp 245.000', stock: 41, category: 'Mini' },
-    { name: 'Payung Signature Gold', price: 'Rp 995.000', stock: 3, category: 'Besar' }
-  ];
+  const allProducts = productList;
 
   const productsPerPage = 12;
 
@@ -319,12 +281,12 @@ export function ProductsPage({ onNavigate }: ProductsPageProps) {
                   className="group bg-white rounded-2xl overflow-hidden shadow-md hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2"
                 >
                   {/* Product Image */}
-                  <div className="aspect-square bg-gradient-to-br from-amber-100 via-orange-100 to-amber-200 flex items-center justify-center relative overflow-hidden">
-                    <div className="text-amber-900 opacity-30 text-center">
-                      <div className="text-5xl mb-2">☂️</div>
-                      <div className="text-sm font-semibold">{product.name}</div>
-                    </div>
-                    {/* Badge */}
+                  <div className="aspect-square relative overflow-hidden bg-white min-h-[260px]">
+                    <img
+                      src={product.imageUrl}
+                      alt={product.alt}
+                      className="block object-cover w-full h-full"
+                    />
                     {product.stock < 10 && (
                       <div className="absolute top-3 right-3 px-3 py-1 bg-red-600 text-white text-xs rounded-full font-semibold">
                         Stok Terbatas

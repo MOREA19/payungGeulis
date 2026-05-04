@@ -1,6 +1,7 @@
 import React from 'react';
 import { Search, ShoppingCart, User, Award, Truck, Shield } from 'lucide-react';
 import { SearchModal } from './SearchModal';
+import { aboutImageUrl } from '../data/payungDataset';
 
 interface AboutPageProps {
   onNavigate: (page: string) => void;
@@ -108,14 +109,12 @@ export function AboutPage({ onNavigate }: AboutPageProps) {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-16 items-center mb-20">
             <div className="relative">
-              <div className="aspect-[4/3] bg-gradient-to-br from-amber-200 via-orange-200 to-amber-300 rounded-3xl shadow-2xl overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center text-amber-900 opacity-40">
-                  <div className="text-center">
-                    <div className="text-7xl mb-4">☂️</div>
-                    <div className="text-2xl font-semibold">Proses Pembuatan</div>
-                    <div className="text-sm mt-2">Payung Tradisional</div>
-                  </div>
-                </div>
+              <div className="aspect-[4/3] rounded-3xl shadow-2xl overflow-hidden bg-white">
+                <img
+                  src={aboutImageUrl}
+                  alt="Proses Pembuatan Payung Geulis"
+                  className="object-cover w-full h-full"
+                />
               </div>
               <div className="absolute -bottom-8 -left-8 w-40 h-40 bg-amber-600 rounded-full opacity-10 blur-3xl"></div>
               <div className="absolute -top-8 -right-8 w-32 h-32 bg-orange-600 rounded-full opacity-10 blur-3xl"></div>
