@@ -12,6 +12,24 @@ export function ProductDetail({ onNavigate }: ProductDetailProps) {
   const [selectedColor, setSelectedColor] = useState('Merah');
   const [selectedImage, setSelectedImage] = useState(0);
   const [searchOpen, setSearchOpen] = useState(false);
+  const handleBuy = async () => {
+  const res = await fetch("http://localhost:3000/checkout", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      user_id: 1,
+      items: [
+        { product_id: 1, quantity: 1 } // nanti bisa dinamis
+      ]
+    })
+  });
+
+  const data = await res.json();
+  console.log(data);
+  alert("Checkout berhasil");
+};
 
   return (
     <div className="bg-[#FFF8F0] min-h-screen">
