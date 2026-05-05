@@ -20,6 +20,7 @@ import { Settings } from './components/Settings';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState('customerLogin');
+  const [user, setUser] = useState<any>(null);
 
   // ⬇️ TAMBAHAN: state produk dari backend
   const [products, setProducts] = useState<any[]>([]);
@@ -75,7 +76,12 @@ export default function App() {
     checkout: <Checkout onNavigate={setCurrentPage} />,
     payment: <Payment onNavigate={setCurrentPage} />,
     orderSuccess: <OrderSuccess onNavigate={setCurrentPage} />,
-    customerLogin: <CustomerLogin onNavigate={setCurrentPage} />,
+    customerLogin: (
+  <CustomerLogin
+    onNavigate={setCurrentPage}
+    onLogin={handleLogin}
+  />
+),,
     customerProfile: <CustomerProfile onNavigate={setCurrentPage} />,
     sellerLogin: <SellerLogin onNavigate={setCurrentPage} />,
     sellerDashboard: <SellerDashboard onNavigate={setCurrentPage} />,
@@ -86,6 +92,22 @@ export default function App() {
     salesReport: <SalesReport onNavigate={setCurrentPage} />,
     settings: <Settings onNavigate={setCurrentPage} />
   };
+
+  const handleLogin = async (email: string) => {
+  const res = await fetch("http://localhost:3000/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ email })
+  });
+
+  const data = await res.json();
+  setUser(data);
+
+  alert("Login berhasil sebagai " + data.name);
+  setCurrentPage("homepage");
+};
 
   return (
     <div className="min-h-screen">
