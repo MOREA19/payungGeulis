@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Homepage } from './components/Homepage';
 import { ProductsPage } from './components/ProductsPage';
 import { AboutPage } from './components/AboutPage';
@@ -21,9 +21,54 @@ import { Settings } from './components/Settings';
 export default function App() {
   const [currentPage, setCurrentPage] = useState('customerLogin');
 
+  // ⬇️ TAMBAHAN: state produk dari backend
+  const [products, setProducts] = useState<any[]>([]);
+
+  // ⬇️ TAMBAHAN: ambil data dari backend
+  useEffect(() => {
+    fetch('http://localhost:3000/products')
+      .then(res => res.json())
+      .then(data => setProducts(data))
+      .catch(err => console.error(err));
+  }, []);
+
+  // ⬇️ TAMBAHAN: fungsi beli (checkout)
+  const handleBuy = async (productId: number) => {
+    const res = await fetch('http://localhost:3000/checkout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        user_id: 1,
+        items: [
+          { product_id: productId, quantity: 1 }
+        ]
+      })
+    });
+
+    const data = await res.json();
+    console.log(data);
+    alert('Checkout berhasil');
+
+    // refresh produk biar stock update
+    const updated = await fetch('http://localhost:3000/products');
+    const newData = await updated.json();
+    setProducts(newData);
+  };
+
   const pages = {
     homepage: <Homepage onNavigate={setCurrentPage} />,
-    products: <ProductsPage onNavigate={setCurrentPage} />,
+    
+    // ⬇️ DI SINI KITA KIRIM DATA + FUNGSI
+    products: (
+      <ProductsPage
+        onNavigate={setCurrentPage}
+        products={products}
+        onBuy={handleBuy}
+      />
+    ),
+
     about: <AboutPage onNavigate={setCurrentPage} />,
     product: <ProductDetail onNavigate={setCurrentPage} />,
     cart: <Cart onNavigate={setCurrentPage} />,

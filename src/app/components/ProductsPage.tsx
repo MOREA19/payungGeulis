@@ -5,9 +5,11 @@ import { productList } from '../data/payungDataset';
 
 interface ProductsPageProps {
   onNavigate: (page: string) => void;
+  products: any[];
+  onBuy: (id: number) => void;
 }
 
-export function ProductsPage({ onNavigate }: ProductsPageProps) {
+export function ProductsPage({ onNavigate, products, onBuy }: ProductsPageProps) {
   const [searchOpen, setSearchOpen] = React.useState(false);
   const [selectedCategory, setSelectedCategory] = React.useState('Semua');
   const [currentPage, setCurrentPage] = React.useState(1);
