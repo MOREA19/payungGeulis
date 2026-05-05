@@ -81,7 +81,7 @@ export default function App() {
     onNavigate={setCurrentPage}
     onLogin={handleLogin}
   />
-),,
+),
     customerProfile: <CustomerProfile onNavigate={setCurrentPage} />,
     sellerLogin: <SellerLogin onNavigate={setCurrentPage} />,
     sellerDashboard: <SellerDashboard onNavigate={setCurrentPage} />,

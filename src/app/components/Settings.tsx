@@ -910,7 +910,6 @@ export function Settings({ onNavigate }: SettingsProps) {
                         {[
                           { name: 'Bahasa Indonesia', code: 'id' },
                           { name: 'English', code: 'en' },
-                          { name: 'Bahasa Sunda', code: 'su' },
                         ].map((lang) => (
                           <button
                             key={lang.code}
