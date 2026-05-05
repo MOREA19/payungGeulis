@@ -4,15 +4,34 @@ import { SearchModal } from './SearchModal';
 
 interface CustomerProfileProps {
   onNavigate: (page: string) => void;
+  user?: any;
+  onLogout?: () => void;
 }
 
-export function CustomerProfile({ onNavigate }: CustomerProfileProps) {
+export function CustomerProfile({ onNavigate, user, onLogout }: CustomerProfileProps) {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-[#FFF8F0] flex items-center justify-center">
+        <div className="text-center">
+          <User className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Belum Login</h2>
+          <p className="text-gray-600 mb-6">Silakan login untuk melihat profil Anda</p>
+          <button 
+            className="px-6 py-3 bg-amber-600 text-white rounded-lg font-semibold hover:bg-amber-700 transition-colors"
+            onClick={() => onNavigate('customerLogin')}
+          >
+            Pergi ke Login
+          </button>
+        </div>
+      </div>
+    );
+  }
   return (
     <>
       <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-amber-50">

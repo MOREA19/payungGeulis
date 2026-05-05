@@ -5,10 +5,17 @@ interface CustomerLoginProps {
   onNavigate: (page: string) => void;
 }
 
-export function CustomerLogin({ onNavigate }: CustomerLoginProps) {
+interface CustomerLoginProps {
+  onNavigate: (page: string) => void;
+  onLogin?: (email: string) => Promise<void>;
+}
+
+export function CustomerLogin({ onNavigate, onLogin }: CustomerLoginProps) {
   const [showRegister, setShowRegister] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
   const [showForgotPassword, setShowForgotPassword] = React.useState(false);
+  const [emailInput, setEmailInput] = React.useState('');
+  const [passwordInput, setPasswordInput] = React.useState('');
 
   return (
     <div className="bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 min-h-screen">
@@ -465,6 +472,8 @@ export function CustomerLogin({ onNavigate }: CustomerLoginProps) {
                     </div>
                     <input
                       type="email"
+                      value={emailInput}
+                      onChange={(e) => setEmailInput(e.target.value)}
                       placeholder="nama@email.com"
                       className="w-full pl-12 pr-4 py-3 border-2 border-gray-200 rounded-xl focus:border-amber-600 focus:outline-none transition-colors"
                     />
@@ -482,6 +491,8 @@ export function CustomerLogin({ onNavigate }: CustomerLoginProps) {
                     </div>
                     <input
                       type={showPassword ? 'text' : 'password'}
+                      value={passwordInput}
+                      onChange={(e) => setPasswordInput(e.target.value)}
                       placeholder="Masukkan password"
                       className="w-full pl-12 pr-12 py-3 border-2 border-gray-200 rounded-xl focus:border-amber-600 focus:outline-none transition-colors"
                     />
@@ -514,10 +525,20 @@ export function CustomerLogin({ onNavigate }: CustomerLoginProps) {
                 </div>
 
                 {/* Login Button */}
-                <button 
+                <button
                   type="button"
                   className="w-full py-4 bg-amber-600 text-white rounded-xl font-semibold hover:bg-amber-700 shadow-lg shadow-amber-600/30 transition-all"
-                  onClick={() => onNavigate('homepage')}
+                  onClick={async () => {
+                    if (onLogin) {
+                      try {
+                        await onLogin(emailInput);
+                      } catch (err) {
+                        alert('Login gagal: ' + (err instanceof Error ? err.message : 'Unknown error'));
+                      }
+                    } else {
+                      onNavigate('homepage');
+                    }
+                  }}
                 >
                   Masuk
                 </button>

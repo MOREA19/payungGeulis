@@ -1,16 +1,99 @@
 import React, { useState } from 'react';
 import { ArrowLeft, ShoppingCart, User, Search, MapPin, Phone, Mail, Package, CreditCard, Clock, Check, Shield } from 'lucide-react';
 import { SearchModal } from './SearchModal';
-import { checkoutItems } from '../data/payungDataset';
+
+interface CartItem {
+  id: number;
+  product_id?: number;
+  name: string;
+  price: number | string;
+  quantity: number;
+  imageUrl: string;
+  stock: number;
+  category: string;
+}
 
 interface CheckoutProps {
   onNavigate: (page: string) => void;
+  cartItems: CartItem[];
+  user: any;
+  onCheckout: () => void;
 }
 
-export function Checkout({ onNavigate }: CheckoutProps) {
+export function Checkout({ onNavigate, cartItems, user, onCheckout }: CheckoutProps) {
   const [selectedShipping, setSelectedShipping] = useState('jne-regular');
-  const [selectedPayment, setSelectedPayment] = useState('');
+  const [selectedPayment, setSelectedPayment] = useState('bca');
   const [searchOpen, setSearchOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    name: user?.name || '',
+    phone: user?.phone || '',
+    email: user?.email || '',
+    address: '',
+    province: '',
+    city: '',
+    zipcode: ''
+  });
+
+  const formatPrice = (price: number | string): string => {
+    const numPrice = typeof price === 'number' ? price : parseInt(price.toString().replace(/[^0-9]/g, ''));
+    return new Intl.NumberFormat('id-ID', {
+      style: 'currency',
+      currency: 'IDR',
+      minimumFractionDigits: 0
+    }).format(numPrice);
+  };
+
+  const subtotal = cartItems.reduce((sum, item) => {
+    const price = typeof item.price === 'number' ? item.price : parseInt(item.price.toString().replace(/[^0-9]/g, ''));
+    return sum + (price * item.quantity);
+  }, 0);
+
+  const shippingMethods = [
+    { id: 'jne-regular', name: 'JNE - Regular', price: 15000, est: '2-3 hari' },
+    { id: 'jne-express', name: 'JNE - Express', price: 25000, est: '1-2 hari' },
+    { id: 'jnt-regular', name: 'J&T - Regular', price: 12000, est: '2-3 hari' },
+    { id: 'sicepat-regular', name: 'SiCepat - Regular', price: 13000, est: '2-3 hari' }
+  ];
+
+  const selectedShippingMethod = shippingMethods.find(m => m.id === selectedShipping);
+  const shippingCost = selectedShippingMethod?.price || 15000;
+  const discount = Math.floor(subtotal * 0.05);
+  const total = subtotal + shippingCost - discount;
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handlePayment = async () => {
+    if (!formData.name || !formData.phone || !formData.address || !formData.province || !formData.city) {
+      alert('Silakan lengkapi semua data pengiriman');
+      return;
+    }
+    if (!selectedPayment) {
+      alert('Silakan pilih metode pembayaran');
+      return;
+    }
+    onCheckout();
+  };
+
+  if (cartItems.length === 0) {
+    return (
+      <div className="bg-[#FFF8F0] min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Keranjang Kosong</h2>
+          <p className="text-gray-600 mb-6">Tidak ada produk untuk di-checkout</p>
+          <button 
+            className="px-6 py-3 bg-amber-600 text-white rounded-lg font-semibold hover:bg-amber-700 transition-colors"
+            onClick={() => onNavigate('products')}
+          >
+            Kembali ke Produk
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-[#FFF8F0] min-h-screen">
@@ -44,7 +127,9 @@ export function Checkout({ onNavigate }: CheckoutProps) {
                 onClick={() => onNavigate('cart')}
               >
                 <ShoppingCart className="w-5 h-5 text-gray-700" />
-                <span className="absolute -top-1 -right-1 w-5 h-5 bg-amber-600 text-white text-xs rounded-full flex items-center justify-center">3</span>
+                <span className="absolute -top-1 -right-1 w-5 h-5 bg-amber-600 text-white text-xs rounded-full flex items-center justify-center">
+                  {cartItems.length}
+                </span>
               </button>
               <button 
                 className="p-2 hover:bg-amber-50 rounded-lg transition-colors"
@@ -115,6 +200,9 @@ export function Checkout({ onNavigate }: CheckoutProps) {
                     <label className="text-sm font-medium text-gray-700 mb-2 block">Nama Lengkap *</label>
                     <input
                       type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
                       placeholder="Masukkan nama lengkap"
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                     />
@@ -123,6 +211,9 @@ export function Checkout({ onNavigate }: CheckoutProps) {
                     <label className="text-sm font-medium text-gray-700 mb-2 block">No. Telepon *</label>
                     <input
                       type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
                       placeholder="08xx-xxxx-xxxx"
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                     />
@@ -133,6 +224,9 @@ export function Checkout({ onNavigate }: CheckoutProps) {
                   <label className="text-sm font-medium text-gray-700 mb-2 block">Email *</label>
                   <input
                     type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
                     placeholder="nama@email.com"
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                   />
@@ -141,6 +235,9 @@ export function Checkout({ onNavigate }: CheckoutProps) {
                 <div>
                   <label className="text-sm font-medium text-gray-700 mb-2 block">Alamat Lengkap *</label>
                   <textarea
+                    name="address"
+                    value={formData.address}
+                    onChange={handleInputChange}
                     placeholder="Jalan, No. Rumah, RT/RW, Kelurahan, Kecamatan"
                     rows={3}
                     className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
@@ -150,7 +247,7 @@ export function Checkout({ onNavigate }: CheckoutProps) {
                 <div className="grid md:grid-cols-3 gap-4">
                   <div>
                     <label className="text-sm font-medium text-gray-700 mb-2 block">Provinsi *</label>
-                    <select className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent">
+                    <select name="province" value={formData.province} onChange={handleInputChange} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent">
                       <option>Pilih Provinsi</option>
                       <option>Jawa Barat</option>
                       <option>DKI Jakarta</option>
@@ -158,7 +255,7 @@ export function Checkout({ onNavigate }: CheckoutProps) {
                   </div>
                   <div>
                     <label className="text-sm font-medium text-gray-700 mb-2 block">Kota/Kabupaten *</label>
-                    <select className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent">
+                    <select name="city" value={formData.city} onChange={handleInputChange} className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent">
                       <option>Pilih Kota</option>
                       <option>Tasikmalaya</option>
                       <option>Bandung</option>
@@ -168,6 +265,9 @@ export function Checkout({ onNavigate }: CheckoutProps) {
                     <label className="text-sm font-medium text-gray-700 mb-2 block">Kode Pos *</label>
                     <input
                       type="text"
+                      name="zipcode"
+                      value={formData.zipcode}
+                      onChange={handleInputChange}
                       placeholder="46xxx"
                       className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent"
                     />
@@ -186,12 +286,7 @@ export function Checkout({ onNavigate }: CheckoutProps) {
               </div>
               
               <div className="space-y-3">
-                {[
-                  { id: 'jne-regular', name: 'JNE - Regular', price: 15000, est: '2-3 hari' },
-                  { id: 'jne-express', name: 'JNE - Express', price: 25000, est: '1-2 hari' },
-                  { id: 'jnt-regular', name: 'J&T - Regular', price: 12000, est: '2-3 hari' },
-                  { id: 'sicepat-regular', name: 'SiCepat - Regular', price: 13000, est: '2-3 hari' }
-                ].map((method) => (
+                {shippingMethods.map((method) => (
                   <label
                     key={method.id}
                     className={`flex items-center justify-between p-4 border-2 rounded-xl cursor-pointer transition-all ${
@@ -316,16 +411,6 @@ export function Checkout({ onNavigate }: CheckoutProps) {
                 </div>
               </div>
             </div>
-
-            {/* Notes */}
-            <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
-              <h3 className="font-semibold text-gray-900 mb-4">Catatan Pesanan (Opsional)</h3>
-              <textarea
-                placeholder="Tambahkan catatan untuk penjual..."
-                rows={3}
-                className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
-              />
-            </div>
           </div>
 
           {/* Right - Order Summary */}
@@ -334,20 +419,20 @@ export function Checkout({ onNavigate }: CheckoutProps) {
               <h2 className="text-xl font-bold text-gray-900 mb-6">Ringkasan Pesanan</h2>
 
               {/* Product Items */}
-              <div className="space-y-4 mb-6 pb-6 border-b border-gray-200">
-                {checkoutItems.map((product) => (
-                  <div key={product.id} className="flex gap-3">
+              <div className="space-y-4 mb-6 pb-6 border-b border-gray-200 max-h-64 overflow-y-auto">
+                {cartItems.map((item) => (
+                  <div key={item.id} className="flex gap-3">
                     <div className="rounded-lg w-16 h-16 overflow-hidden flex-shrink-0 bg-white shadow-inner">
                       <img
-                        src={product.imageUrl}
-                        alt={product.alt}
+                        src={item.imageUrl}
+                        alt={item.name}
                         className="object-cover w-full h-full"
                       />
                     </div>
                     <div className="flex-1">
-                      <h4 className="text-sm font-medium text-gray-900 mb-1">{product.name}</h4>
-                      <p className="text-xs text-gray-600 mb-2">Merah • Qty: 1</p>
-                      <p className="text-sm font-semibold text-amber-700">{product.price}</p>
+                      <h4 className="text-sm font-medium text-gray-900 mb-1">{item.name}</h4>
+                      <p className="text-xs text-gray-600 mb-2">{item.category} • Qty: {item.quantity}</p>
+                      <p className="text-sm font-semibold text-amber-700">{formatPrice(item.price)}</p>
                     </div>
                   </div>
                 ))}
@@ -356,16 +441,16 @@ export function Checkout({ onNavigate }: CheckoutProps) {
               {/* Price Details */}
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Subtotal Produk</span>
-                  <span className="font-medium text-gray-900">Rp 435.000</span>
+                  <span className="text-gray-600">Subtotal ({cartItems.length} item)</span>
+                  <span className="font-medium text-gray-900">{formatPrice(subtotal)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Ongkos Kirim</span>
-                  <span className="font-medium text-gray-900">Rp 15.000</span>
+                  <span className="font-medium text-gray-900">{formatPrice(shippingCost)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Diskon</span>
-                  <span className="font-medium text-emerald-600">- Rp 20.000</span>
+                  <span className="font-medium text-emerald-600">- {formatPrice(discount)}</span>
                 </div>
               </div>
 
@@ -373,15 +458,15 @@ export function Checkout({ onNavigate }: CheckoutProps) {
               <div className="bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl p-4 mb-6 border border-amber-200">
                 <div className="flex justify-between items-center">
                   <span className="font-semibold text-gray-900">Total Pembayaran</span>
-                  <span className="text-2xl font-bold text-amber-700">Rp 430.000</span>
+                  <span className="text-2xl font-bold text-amber-700">{formatPrice(total)}</span>
                 </div>
               </div>
 
               {/* Action Buttons */}
               <div className="space-y-3">
                 <button
-                  className="w-full py-4 bg-amber-600 text-white rounded-xl font-semibold hover:bg-amber-700 shadow-lg shadow-amber-600/30 transition-all"
-                  onClick={() => onNavigate('payment')}
+                  className="w-full py-4 bg-amber-600 text-white rounded-xl font-semibold hover:bg-amber-700 shadow-lg shadow-amber-600/30 transition-all disabled:opacity-50"
+                  onClick={handlePayment}
                 >
                   Lanjut ke Pembayaran
                 </button>
@@ -405,3 +490,5 @@ export function Checkout({ onNavigate }: CheckoutProps) {
     </div>
   );
 }
+
+
