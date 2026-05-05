@@ -149,6 +149,22 @@ export default function App() {
     }
   };
 
+  const handleLogin = async (email: string) => {
+    const res = await fetch("http://localhost:3000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+    setUser(data);
+
+    alert("Login berhasil sebagai " + data.name);
+    setCurrentPage("homepage");
+  };
+
   const pages = {
     homepage: <Homepage onNavigate={setCurrentPage} />,
     products: (
@@ -180,18 +196,12 @@ export default function App() {
     payment: <Payment onNavigate={setCurrentPage} />,
     orderSuccess: <OrderSuccess onNavigate={setCurrentPage} />,
     customerLogin: (
-      <CustomerLogin
-        onNavigate={setCurrentPage}
-        onLogin={handleLogin}
-      />
-    ),
-    customerProfile: (
-      <CustomerProfile 
-        onNavigate={setCurrentPage}
-        user={user}
-        onLogout={handleLogout}
-      />
-    ),
+  <CustomerLogin
+    onNavigate={setCurrentPage}
+    onLogin={handleLogin}
+  />
+),,
+    customerProfile: <CustomerProfile onNavigate={setCurrentPage} />,
     sellerLogin: <SellerLogin onNavigate={setCurrentPage} />,
     sellerDashboard: <SellerDashboard onNavigate={setCurrentPage} />,
     manageProducts: <ManageProducts onNavigate={setCurrentPage} />,

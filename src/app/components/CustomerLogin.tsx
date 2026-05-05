@@ -3,7 +3,9 @@ import { ArrowLeft, Mail, Lock, Eye, User, Phone, MapPin, X } from 'lucide-react
 
 interface CustomerLoginProps {
   onNavigate: (page: string) => void;
+  onLogin: (email: string) => void;
 }
+
 
 interface CustomerLoginProps {
   onNavigate: (page: string) => void;
