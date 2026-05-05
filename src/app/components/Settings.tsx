@@ -79,9 +79,14 @@ export function Settings({ onNavigate }: SettingsProps) {
     },
   };
 
-  const t = translations[language as keyof typeof translations] || translations.id;
+  // Language & Region States
+  const [language, setLanguage] = React.useState('id');
+  const [timezone, setTimezone] = React.useState('wib');
+  const [currency, setCurrency] = React.useState('idr');
+  const [dateFormat, setDateFormat] = React.useState('DD/MM/YYYY');
+  const [numberFormat, setNumberFormat] = React.useState('1.234.567,89');
 
-  // Business Hours
+  const t = translations[language as keyof typeof translations] || translations.id;
   const [businessHours, setBusinessHours] = React.useState([
     { day: 'Senin', hours: '08:00 - 17:00', open: true },
     { day: 'Selasa', hours: '08:00 - 17:00', open: true },
@@ -132,13 +137,6 @@ export function Settings({ onNavigate }: SettingsProps) {
   const [compactMode, setCompactMode] = React.useState(false);
   const [animations, setAnimations] = React.useState(true);
   const [showAvatar, setShowAvatar] = React.useState(true);
-
-  // Language & Region States
-  const [language, setLanguage] = React.useState('id');
-  const [timezone, setTimezone] = React.useState('wib');
-  const [currency, setCurrency] = React.useState('idr');
-  const [dateFormat, setDateFormat] = React.useState('DD/MM/YYYY');
-  const [numberFormat, setNumberFormat] = React.useState('1.234.567,89');
 
   const handleSaveChanges = () => {
     alert(t.changesSaved);
