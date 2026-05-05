@@ -58,6 +58,22 @@ export default function App() {
     setProducts(newData);
   };
 
+  const handleLogin = async (email: string) => {
+    const res = await fetch("http://localhost:3000/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email })
+    });
+
+    const data = await res.json();
+    setUser(data);
+
+    alert("Login berhasil sebagai " + data.name);
+    setCurrentPage("homepage");
+  };
+
   const pages = {
     homepage: <Homepage onNavigate={setCurrentPage} />,
     
@@ -92,22 +108,6 @@ export default function App() {
     salesReport: <SalesReport onNavigate={setCurrentPage} />,
     settings: <Settings onNavigate={setCurrentPage} />
   };
-
-  const handleLogin = async (email: string) => {
-  const res = await fetch("http://localhost:3000/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({ email })
-  });
-
-  const data = await res.json();
-  setUser(data);
-
-  alert("Login berhasil sebagai " + data.name);
-  setCurrentPage("homepage");
-};
 
   return (
     <div className="min-h-screen">

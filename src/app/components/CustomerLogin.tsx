@@ -3,9 +3,10 @@ import { ArrowLeft, Mail, Lock, Eye, User, Phone, MapPin, X } from 'lucide-react
 
 interface CustomerLoginProps {
   onNavigate: (page: string) => void;
+  onLogin: (email: string) => void;
 }
 
-export function CustomerLogin({ onNavigate }: CustomerLoginProps) {
+export function CustomerLogin({ onNavigate, onLogin }: CustomerLoginProps) {
   const [showRegister, setShowRegister] = React.useState(false);
   const [showPassword, setShowPassword] = React.useState(false);
   const [showForgotPassword, setShowForgotPassword] = React.useState(false);
